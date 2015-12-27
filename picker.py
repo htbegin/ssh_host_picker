@@ -282,7 +282,8 @@ if __name__ == "__main__":
 
     checker = None
     cached_srv_name_list = load_srv_list_from_file(get_cfg_fpath())
-    if cached_srv_name_list is not None and not is_srv_list_file_expired(get_cfg_fpath()) and \
+    if not opt.force and cached_srv_name_list is not None and \
+       not is_srv_list_file_expired(get_cfg_fpath()) and \
        set(cached_srv_name_list) == set(srv_name_list) and opt.only is None:
         srv_name_list = cached_srv_name_list
     elif opt.only is None:

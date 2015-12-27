@@ -233,7 +233,7 @@ def is_srv_list_file_expired(fpath):
     else:
         f_mtime_sec = result.st_mtime
         now_sec = time.time()
-        if now_sec - f_mtime_sec < 48 * 3600:
+        if now_sec - f_mtime_sec < 72 * 3600:
             expired = False
     return expired
 

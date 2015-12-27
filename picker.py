@@ -16,6 +16,7 @@ CONT = "(?i)are you sure you want to continue connecting"
 PASSWD = "(?i)password:"
 PERM = "(?i)permission denied"
 CLOSE = "(?i)connection closed by remote host"
+KEY_VERIFY_ERR = "(Host key verification failed)|ssh_exchange_identification"
 P_TIMEOUT = pexpect.TIMEOUT
 P_EOF = pexpect.EOF
 
@@ -45,7 +46,7 @@ def connect_to_ssh_server(srv, port, cmd, user, passwd, timeout, ob_key):
           "-o ServerAliveInterval=20" % (cmd, ob_key, user, srv, port)
 
     child = pexpect.spawn(cmd)
-    idx = child.expect([PASSWD, CONT, P_TIMEOUT, P_EOF], timeout=timeout)
+    idx = child.expect([PASSWD, CONT, KEY_VERIFY_ERR, P_TIMEOUT, P_EOF], timeout=timeout)
     if idx == 0:
         return handle_passwd(child, srv, port, passwd)
     elif idx == 1:
@@ -60,8 +61,10 @@ def connect_to_ssh_server(srv, port, cmd, user, passwd, timeout, ob_key):
         else:
             handle_error(child, srv, port, "unexpected error")
     elif idx == 2:
-        handle_error(child, srv, port, "timeouted")
+        handle_error(child, srv, port, "invalid known_hosts")
     elif idx == 3:
+        handle_error(child, srv, port, "timeouted")
+    elif idx == 4:
         handle_error(child, srv, port, "closed")
     else:
         handle_error(child, srv, port, "unexpected error")

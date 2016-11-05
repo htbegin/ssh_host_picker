@@ -269,7 +269,7 @@ if __name__ == "__main__":
     timeout = opt.timeout
 
     if not os.path.exists(cmd):
-        opt.print_help()
+        parse.print_help()
         sys.exit(1)
 
     srv_name_list = opt.server
